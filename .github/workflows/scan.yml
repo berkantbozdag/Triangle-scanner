@@ -1,0 +1,32 @@
+name: Scan 3D Triangle Signals
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scanner
+        run: python triangle_break_scanner_light_3d.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: triangle-scan-results
+          path: triangle_break_scan_results_light.csv
+          if-no-files-found: ignore
